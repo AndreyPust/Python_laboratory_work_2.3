@@ -9,22 +9,16 @@
 # •	в самом длинном слове удалить среднюю (средние) букву(ы);
 # •	принять, что такое слово – единственное.
 
-import sys
-
-
 if __name__ == '__main__':
     s = input("Введите ваше предложение: ")
+    end_s = ''  # конечное предложение
 
-    # Проверим, есть ли в предложении единственное наибольшее слово
+    # Найдем в предложении наибольшее слово
     s_words = s.split(' ')  # разделим предложение на слова
     max_word = ''
     for i in s_words:
         if len(i) > len(max_word):
             max_word = i
-        elif len(i) == len(max_word):
-            print("В предложении более одного самого длинного слова",
-                  file=sys.stderr)
-            exit(1)
 
     # Удалим из наибольшего слова средние буквы
     if len(max_word) % 2 == 1:
@@ -36,7 +30,6 @@ if __name__ == '__main__':
         # Собираем предложение обратно с учетом
         # отредактированного максимального слова
         s = ' '.join([word if word != max_word_save else max_word for word in s_words])
-        print(s)
     else:
         # Индексы средней буквы для четного
         middle_index = len(max_word) // 2
@@ -49,4 +42,22 @@ if __name__ == '__main__':
 
     # Оставим в слове только первые вхождения букв
     # и удалим все вхождения последней буквы
-    
+    for word in s_words:
+        last_letter = word[-1]  # последняя буква
+        first_letters = ['']    # создаем список нужных букв
+        # Дополним список первых вхождений
+        for letter in word:
+            if letter not in first_letters:
+                first_letters.append(letter)
+        # добавим последнее слово если такого нет в конце
+        if last_letter not in first_letters[-1]:
+            first_letters.append(last_letter)
+        # Соберем слово обратно
+        result_word = ''.join(first_letters)
+        # И это слово отправим в предложение
+        end_s = end_s + result_word + ' '
+
+    # Заменим первую встреченную букву а на о
+    end_s = end_s.replace("а", "о", 1)
+
+    print("Предложение после преобразований: ", end_s)
